@@ -33,6 +33,7 @@ export class SettingsService {
 
   aplicarTema( tema: string ) {
     const url = `assets/css/colors/${ tema }.css`;
+    /* seteamos nuestro elemento css del index.html con el del tema seleccionado */
     this.document.getElementById('tema').setAttribute('href', url );
     this.ajustes.tema = tema;
     this.ajustes.temaUrl = url;
