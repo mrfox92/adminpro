@@ -9,6 +9,8 @@ import { SharedModule } from '../shared/shared.module';
 /* components */
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProgressComponent } from './progress/progress.component';
+/* sweet alert */
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { Graficas1Component } from './graficas1/graficas1.component';
 import { PagesComponent } from './pages.component';
 import { GraficoDonaComponent } from '../components/grafico-dona/grafico-dona.component';
@@ -21,6 +23,9 @@ import { PAGES_ROUTES } from './pages.routes';
 
 /* temporal */
 import { IncrementadorComponent } from '../components/incrementador/incrementador.component';
+/* pipes module */
+import { PipesModule } from '../pipes/pipes.module';
+import { ProfileComponent } from './profile/profile.component';
 
 
 @NgModule({
@@ -33,7 +38,8 @@ import { IncrementadorComponent } from '../components/incrementador/incrementado
         GraficoDonaComponent,
         AccountSettingsComponent,
         PromesasComponent,
-        RxjsComponent
+        RxjsComponent,
+        ProfileComponent
     ],
     exports: [
         PagesComponent,
@@ -46,7 +52,9 @@ import { IncrementadorComponent } from '../components/incrementador/incrementado
         SharedModule,
         PAGES_ROUTES,
         FormsModule,
-        ChartsModule
+        ChartsModule,
+        PipesModule,
+        SweetAlert2Module
     ]
 })
 export class PagesModule { }
