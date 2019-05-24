@@ -34,7 +34,7 @@ export class ProfileComponent implements OnInit {
     this.swalMessage.text = texto;
     this.swalMessage.type = tipo;
     this.swalMessage.show();
-}
+  }
 
   guardar( usuario: Usuario ) {
 
@@ -43,7 +43,7 @@ export class ProfileComponent implements OnInit {
       this.usuario.email = usuario.email;
     }
     this.usuarioService.actualizarUsuario( this.usuario ).subscribe( resp => {
-      this.getMessage('Usuario actualizado', `${ resp }`, 'success');
+      this.getMessage('Usuario actualizado', 'Información actualizada con éxito', 'success');
     });
   }
 
@@ -59,7 +59,7 @@ export class ProfileComponent implements OnInit {
       this.imagenSubir = null;
       return;
     }
-
+    /* generamos el preview de la imagen a subir */
     this.imagenSubir = archivo;
     //  obtener la ruta temporal de la imagen con vanilla javascript
     const reader = new FileReader();

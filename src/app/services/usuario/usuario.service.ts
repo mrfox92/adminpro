@@ -12,7 +12,7 @@ import { Observable, from } from 'rxjs';
 })
 export class UsuarioService {
 
-  //  Propiedades para sabe si un usuario está autenticado
+  //  Propiedades para saber si un usuario está autenticado
   usuario: Usuario;
   token: string;
 
@@ -21,7 +21,7 @@ export class UsuarioService {
     public router: Router,
     public subirarchivoService: SubirArchivoService
     ) {
-    console.log('Servicio de usuario listo!');
+    //  console.log('Servicio de usuario listo!');
     this.cargarStorage();
   }
 
@@ -98,10 +98,14 @@ export class UsuarioService {
 
     return this.http.put( url, usuario )
                     .pipe( map( (resp: any) => {
-
-                      const usuarioDB = resp.usuario;
-                      this.guardarStorage( usuarioDB._id, this.token, usuarioDB );
-                      return usuarioDB.nombre;
+                      //  validamos de que el usuario que realiza la modificacion es el usuario logueado
+                      if ( usuario._id === this.usuario._id ) {
+                        const usuarioDB: Usuario = resp.usuario;
+                        this.guardarStorage( usuarioDB._id, this.token, usuarioDB );
+                        return true;
+                      } else {
+                        return true;
+                      }
                     }));
   }
 
@@ -110,11 +114,36 @@ export class UsuarioService {
         .then( (resp: any) => {
           this.usuario.img = resp.usuario.img;
           this.guardarStorage( id, this.token, this.usuario );
-          return true;
+          return resp.usuario;
         })
         .catch( resp => {
           console.log( resp );
           return false;
         }));
+  }
+
+  cargarUsuarios( desde: number = 0 ) {
+    //  localhost:3000/usuario?desde=5
+    const url = `${ URL_SERVICIOS }/usuario?desde=${ desde }`;
+
+    return this.http.get( url );
+  }
+
+  buscarUsuarios( termino: string ) {
+    //   localhost:3000/busqueda/coleccion/usuarios/test
+    const url = `${ URL_SERVICIOS }/busqueda/coleccion/usuarios/${ termino }`;
+
+    return this.http.get( url ).pipe( map( (resp: any) => resp.usuarios ) );
+  }
+
+  borrarUsuario( id: string ) {
+    //  localhost:3000/usuario/5cdb38bdea089e3e257eebba?token=kasashhasjas
+    let url = `${ URL_SERVICIOS }/usuario/${ id }`;
+    url += '?token=' + this.token;
+
+    return this.http.delete( url ).pipe( map( resp => {
+      return true;
+    }));
+
   }
 }
