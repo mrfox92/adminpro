@@ -33,13 +33,12 @@
                             <th>Nombre</th>
                             <th>Role</th>
                             <th>Auth</th>
-                            <th></th>
+                            <th>Opciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let usuario of usuarios">
                             <td>
-                                <!-- <button type="button" (click)="modal()" class="btn btn-primary">Ver</button> -->
                                 <img (click)="mostrarModal( usuario._id )" [src]="usuario.img | imagen" class="img-circle pointer" width=50 height=50>
                             </td>
                             <td>{{ usuario.email }}</td>

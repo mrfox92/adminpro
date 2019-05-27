@@ -25,11 +25,13 @@ export class SidebarComponent implements OnInit {
       si es verdadero entonces actualizamos la imagen del usuario autenticado por la que ha subido
       se debe actualizar tanto en el sidebar como en el header navbar.
        */
-      if ( this.usuario._id === resp.usuario._id ) {
-        //  actualizamos la imagen de nuestro usuario logueado para el header y el sidebar
-        this.usuario.img = resp.usuario.img;
-        //  cargamos las actualizaciones al storage
-        this.usuarioService.guardarStorage( this.usuario._id, this.usuarioService.token, this.usuario );
+      if ( resp.usuario ) {
+        if ( this.usuario._id === resp.usuario._id ) {
+          //  actualizamos la imagen de nuestro usuario logueado para el header y el sidebar
+          this.usuario.img = resp.usuario.img;
+          //  cargamos las actualizaciones al storage
+          this.usuarioService.guardarStorage( this.usuario._id, this.usuarioService.token, this.usuario );
+        }
       }
     });
   }

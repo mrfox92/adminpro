@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { SubirArchivoService } from '../../services/service.index';
 import { ModalUploadService } from './modal-upload.service';
+//  Sweet Alert
+import { SweetAlertType } from 'sweetalert2';
+import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 declare const $: any;
 @Component({
   selector: 'app-modal-upload',
@@ -8,6 +11,9 @@ declare const $: any;
   styles: []
 })
 export class ModalUploadComponent implements OnInit {
+
+  @ViewChild('swalFileUpload') private swalFileUpload: SwalComponent;
+  @ViewChild('file') private fileUpload: ElementRef;
 
   imagenSubir: File;
   imagenTemp: any;
@@ -20,10 +26,30 @@ export class ModalUploadComponent implements OnInit {
   ngOnInit() {
   }
 
+  reset() {
+    //  console.log( this.fileUpload.nativeElement.files );
+    this.fileUpload.nativeElement.value = '';
+    //  console.log( this.fileUpload.nativeElement.files );
+
+  }
+  getMessage( titulo: string, texto: string, tipo: SweetAlertType) {
+
+    this.swalFileUpload.title = titulo;
+    this.swalFileUpload.text = texto;
+    this.swalFileUpload.type = tipo;
+    this.swalFileUpload.showConfirmButton = true;
+    this.swalFileUpload.showCancelButton = false;
+    this.swalFileUpload.confirmButtonText = 'Ok';
+    this.swalFileUpload.cancelButtonText = 'Cancel';
+    this.swalFileUpload.confirmButtonColor = '#3085d6';
+    this.swalFileUpload.show();
+  }
+
   cerrarModal() {
     this.imagenSubir = null;
     this.imagenTemp = null;
     this.modalUploadService.ocultarModal();
+    this.reset();
   }
 
   seleccionImagen( archivo: File ) {
@@ -51,8 +77,13 @@ export class ModalUploadComponent implements OnInit {
     this.subirArchivoService.subirArchivo( this.imagenSubir, this.modalUploadService.tipo, this.modalUploadService.id )
     .then( resp => {
       //  emitimos que ya se subio la imagen
+      /* if ( this.modalUploadService.tipo === 'usuarios' ) {
+
+      } */
       this.modalUploadService.notificacion.emit( resp );
       this.cerrarModal();
+      this.reset();
+      this.getMessage('Imagen subida', 'La imagen ha sido subida con éxito', 'success');
     })
     .catch( err => {
       console.log('Error en la carga...');

@@ -2,7 +2,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Modal title</h5>
+                <h5 class="modal-title">{{ modalUploadService.tipo }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -11,7 +11,7 @@
                 <img *ngIf="!imagenTemp" class="img-fluid my-2" width=150 height=150 [src]="'xxx' | imagen" alt="">
                 <img *ngIf="imagenTemp" class="img-fluid my-2" width=150 height=150 [src]="imagenTemp" alt="">
                 <div class="form-group">
-                    <input (change)="seleccionImagen( $event.target.files[0] )" type="file" class="form-control" id="exampleInputFile" aria-describedby="fileHelp">
+                    <input #file (change)="seleccionImagen( $event.target.files[0] )" type="file" class="form-control" id="exampleInputFile" aria-describedby="fileHelp">
                 </div>
             </div>
             <div class="modal-footer">
@@ -21,3 +21,6 @@
         </div>
     </div>
 </div>
+
+<swal #swalFileUpload title="" text="" type="" cancelButtonColor="" confirmButtonColor="" showCancelButton="" cancelButtonText="" confirmButtonText="" showConfirmButton="true" focusCancel="">
+</swal>

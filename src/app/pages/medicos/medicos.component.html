@@ -1,0 +1,72 @@
+<div class="row animated fadeIn">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <input #busqueda (keyup)="buscarMedico( busqueda.value )" class="form-control" type="text" placeholder="Buscar medico...">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row animated fadeIn" *ngIf="loading">
+    <div class="col-md-12">
+        <div class="alert alert-warning text-center">
+            <strong>Cargando</strong>
+            <br>
+            <i class="fa fa-refresh fa-spin fa-2x"></i>
+            <br>
+            <span>Espere por favor</span>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-right">
+                    <button [routerLink]="['/medico', 'nuevo']" type="button" class="btn btn-success my-2">
+                        <i class="fa fa-plus"></i>
+                        Crear Médico
+                    </button>
+                </div>
+                <h3 class="card-title">Médicos registrados ( <small>{{ totalRegistros }}</small> )</h3>
+                <table class="table table-hover table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Nombre</th>
+                            <th>Hospital</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let medico of medicos">
+                            <td>
+                                <img width=50px height=50px class="img-fluid img-circle" [src]="medico.img | imagen:'medico'" alt="">
+                            </td>
+                            <td>{{ medico.nombre }}</td>
+                            <td>{{ medico.hospital['nombre'] }}</td>
+                            <td>
+                                <button [routerLink]="['/medico', medico._id]" class="btn btn-primary m-1">
+                                  <i class="fa fa-save"></i>
+                                </button>
+                                <button (click)="borrarMedico( medico )" type="button" class="btn btn-danger m-1">
+                                    <i class="fa fa-trash-o"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button (click)="cambiarDesde( -5 )" class="btn btn-secondary m-2">
+                Anteriores
+                </button>
+                <button (click)="cambiarDesde( 5 )" class="btn btn-secondary m-2">
+                Siguientes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<swal #swalMessageMedicos title="" text="" type="" cancelButtonColor="" confirmButtonColor="" showCancelButton="" cancelButtonText="" confirmButtonText="" showConfirmButton="true" focusCancel="">
+</swal>
+<swal #swalDelete title="" text="" type="" cancelButtonColor="" confirmButtonColor="" showCancelButton="" cancelButtonText="" confirmButtonText="" showConfirmButton="true" focusCancel="">
+</swal>

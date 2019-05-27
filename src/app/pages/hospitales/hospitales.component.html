@@ -1,0 +1,75 @@
+<div class="row animated fadeIn">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <input #busqueda (keyup)="buscarHospital( busqueda.value )" class="form-control" type="text" placeholder="Buscar hospital...">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row animated fadeIn" *ngIf="loading">
+    <div class="col-md-12">
+        <div class="alert alert-warning text-center">
+            <strong>Cargando</strong>
+            <br>
+            <i class="fa fa-refresh fa-spin fa-2x"></i>
+            <br>
+            <span>Espere por favor</span>
+        </div>
+    </div>
+</div>
+<div class="row animated fadeIn">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-right">
+                    <button (click)="cargarModal()" type="button" class="btn btn-success my-2">
+                        <i class="fa fa-plus"></i>
+                        Crear hospital
+                    </button>
+                </div>
+                <h3 class="mt-4">Hospitales registrados ( <small>{{ totalRegistros }}</small> )</h3>
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Foto</th>
+                            <th>Hospital</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let hospital of hospitales">
+                            <td>
+                                <img (click)="actualizarIMagen( hospital._id )" class="img-fluid img-rounded pointer" [src]="hospital.img | imagen: tipo" width=50px height=50px>
+                            </td>
+                            <td>
+                                <input #nombre class="form-control" [(ngModel)]="hospital.nombre" type="text" placeholder="Nombre hospital">
+                            </td>
+                            <td>
+                                <button (click)="actualizarHospital( nombre.value, hospital )" class="btn btn-primary m-1">
+                                  <i class="fa fa-save"></i>
+                                </button>
+                                <button (click)="borrarHospital( hospital )" type="button" class="btn btn-danger m-1">
+                                    <i class="fa fa-trash-o"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <button (click)="cambiarDesde( -5 )" class="btn btn-secondary m-2">
+                Anteriores
+                </button>
+                <button (click)="cambiarDesde( 5 )" class="btn btn-secondary m-2">
+                Siguientes
+                </button>
+            </div>
+        </div>
+        <swal #swalMessageHospitales title="" text="" type="" cancelButtonColor="" confirmButtonColor="" showCancelButton="" cancelButtonText="" confirmButtonText="" showConfirmButton="true" focusCancel="">
+        </swal>
+        <swal #swalInputModal input="" inputPlaceholder="" title="" text="" type="" cancelButtonColor="" confirmButtonColor="" showCancelButton="" cancelButtonText="" confirmButtonText="" showConfirmButton="true" focusCancel="">
+        </swal>
+        <swal #swalDeleteHospital title="" text="" type="" cancelButtonColor="" confirmButtonColor="" showCancelButton="" cancelButtonText="" confirmButtonText="" showConfirmButton="true" focusCancel="">
+        </swal>
+    </div>
+</div>
