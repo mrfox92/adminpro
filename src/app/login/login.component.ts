@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { UsuarioService } from '../services/service.index';
 import { Usuario } from '../models/usuario.model';
 import { NgZone } from '@angular/core';
+import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
+import { SweetAlertType } from 'sweetalert2';
 
 declare function init_plugins();
 declare const gapi: any;
@@ -14,6 +16,8 @@ declare const gapi: any;
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+
+  @ViewChild('swalLoginMessage') private swalLoginMessage: SwalComponent;
 
   email: string;
   recuerdame: boolean = false;
@@ -32,6 +36,18 @@ export class LoginComponent implements OnInit {
     if ( this.email.length > 1 ) {
       this.recuerdame = true;
     }
+  }
+  getMessage( titulo: string, texto: string, tipo: SweetAlertType) {
+
+    this.swalLoginMessage.title = titulo;
+    this.swalLoginMessage.text = texto;
+    this.swalLoginMessage.type = tipo;
+    this.swalLoginMessage.showConfirmButton = true;
+    this.swalLoginMessage.showCancelButton = false;
+    this.swalLoginMessage.confirmButtonText = 'Ok';
+    this.swalLoginMessage.cancelButtonText = 'Cancel';
+    this.swalLoginMessage.confirmButtonColor = '#3085d6';
+    this.swalLoginMessage.show();
   }
 
   googleInit() {
@@ -68,6 +84,11 @@ export class LoginComponent implements OnInit {
 
     const usuario = new Usuario( null, forma.value.email, forma.value.password);
     this.usuarioService.login( usuario, this.recuerdame )
-                        .subscribe( resp => this.router.navigate(['/dashboard']) );
+                        .subscribe(
+                          resp => this.router.navigate(['/dashboard']),
+                          err => {
+                            this.getMessage('Error acceso', err, 'error');
+                          }
+                          );
   }
 }

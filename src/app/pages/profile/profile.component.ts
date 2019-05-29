@@ -4,6 +4,7 @@ import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 import { SweetAlertType } from 'sweetalert2';
 import { Usuario } from '../../models/usuario.model';
 import { UsuarioService } from '../../services/service.index';
+import { ModalUploadService } from '../../components/modal-upload/modal-upload.service';
 
 @Component({
   selector: 'app-profile',
@@ -19,12 +20,20 @@ export class ProfileComponent implements OnInit {
   imagenTemp: any;
 
   constructor(
-    public usuarioService: UsuarioService
-  ) {
-    this.usuario = this.usuarioService.usuario;
-  }
+    public usuarioService: UsuarioService,
+    public modalUploadService: ModalUploadService
+  ) { }
 
   ngOnInit() {
+    //  inicializamos la data del usuario
+    this.cargarUsuario();
+    this.modalUploadService.notificacion.subscribe( () => {
+      this.cargarUsuario();
+    });
+  }
+
+  cargarUsuario() {
+    this.usuario = this.usuarioService.usuario;
   }
 
   /* obtener mensaje sweet alert */
@@ -42,7 +51,7 @@ export class ProfileComponent implements OnInit {
     if ( !this.usuario.google ) {
       this.usuario.email = usuario.email;
     }
-    this.usuarioService.actualizarUsuario( this.usuario ).subscribe( resp => {
+    this.usuarioService.actualizarUsuario( this.usuario ).subscribe( (resp: any) => {
       this.getMessage('Usuario actualizado', 'Información actualizada con éxito', 'success');
     });
   }
@@ -73,6 +82,7 @@ export class ProfileComponent implements OnInit {
     this.usuarioService.cambiarImagen( this.imagenSubir, this.usuario._id ).subscribe( resp => {
       if ( resp ) {
         this.getMessage( 'Imagen perfil actualizada', 'Tu foto de perfil ha sido actualizada con éxito', 'success' );
+        this.modalUploadService.notificacion.emit(resp);
       } else {
         this.getMessage( 'Imagen usuario error', 'la imagen no ha ha podido ser actualizada', 'error' );
       }

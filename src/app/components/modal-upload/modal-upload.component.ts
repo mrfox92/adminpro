@@ -4,6 +4,8 @@ import { ModalUploadService } from './modal-upload.service';
 //  Sweet Alert
 import { SweetAlertType } from 'sweetalert2';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
+import { UsuarioService } from '../../services/service.index';
+import { Usuario } from '../../models/usuario.model';
 declare const $: any;
 @Component({
   selector: 'app-modal-upload',
@@ -17,13 +19,16 @@ export class ModalUploadComponent implements OnInit {
 
   imagenSubir: File;
   imagenTemp: any;
+  usuario: Usuario;
 
   constructor(
+    public usuarioService: UsuarioService,
     public subirArchivoService: SubirArchivoService,
     public modalUploadService: ModalUploadService
   ) { }
 
   ngOnInit() {
+    this.usuario = this.usuarioService.usuario;
   }
 
   reset() {
@@ -75,11 +80,17 @@ export class ModalUploadComponent implements OnInit {
 
   subirImagen() {
     this.subirArchivoService.subirArchivo( this.imagenSubir, this.modalUploadService.tipo, this.modalUploadService.id )
-    .then( resp => {
+    .then( (resp: any) => {
+      //  validamos de que el usuario que realiza la modificacion es el usuario logueado
+      if ( resp.usuario ) {
+        if ( this.usuario._id === resp.usuario._id ) {
+          //  actualizamos la imagen de nuestro usuario logueado para el header y el sidebar
+          this.usuario.img = resp.usuario.img;
+          //  cargamos las actualizaciones al storage
+          this.usuarioService.guardarStorage( this.usuario._id, this.usuarioService.token, this.usuario, this.usuarioService.menu );
+        }
+      }
       //  emitimos que ya se subio la imagen
-      /* if ( this.modalUploadService.tipo === 'usuarios' ) {
-
-      } */
       this.modalUploadService.notificacion.emit( resp );
       this.cerrarModal();
       this.reset();

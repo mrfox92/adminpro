@@ -99,7 +99,11 @@ export class RegisterComponent implements OnInit {
         this.router.navigate(['/login']);
       }
       console.log( resp );
-    });
+    },
+    err => {
+      this.getMessage( err.error.mensaje, err.error.errors.message , 'error');
+    }
+    );
   }
 
 }

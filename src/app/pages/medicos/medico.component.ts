@@ -50,7 +50,9 @@ export class MedicoComponent implements OnInit {
     this.hospitalService.cargarHospitales(this.desde, this.todo).subscribe( (resp: any) => this.hospitales = resp.hospitales );
 
     this.modalUploadService.notificacion.subscribe( resp => {
-      this.medico.img = resp.medico.img;
+      if ( resp.medico ) {
+        this.medico.img = resp.medico.img;
+      }
     });
   }
 
