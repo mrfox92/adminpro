@@ -26,6 +26,21 @@ export class UsuarioService {
     this.cargarStorage();
   }
 
+  renuevaToken() {
+    //  localhost:3000/login/renuevatoken?token=token12334
+    let url = `${ URL_SERVICIOS }/login/renuevatoken`;
+    url += `?token=${ this.token }`;
+    return this.http.get( url ).pipe( map( (resp: any) => {
+      this.token = resp.token;
+      localStorage.setItem('token', this.token);
+      console.log('token renovado');
+      return true;
+    }))
+    .pipe(
+      catchError( error => this.handleError(error) )
+    );
+  }
+
   estaLogueado() {
     return ( this.token.length > 5 ) ? true : false;
   }
@@ -96,7 +111,7 @@ export class UsuarioService {
 //  ===========================
 
   handleError(error) {
-    //  let errorMessage = '';
+    let errorMessage = '';
     /* si el contenido dentro de error es una instancia de ErrorEvent */
     /* if ( error.error instanceof ErrorEvent ) {
       //  Client-side error
@@ -107,8 +122,9 @@ export class UsuarioService {
     } */
 
     //  window.alert(errorMessage);
-    //  console.log( errorMessage );
-    return throwError(error);
+    errorMessage = `${ error.error.mensaje }`;
+    console.log( errorMessage );
+    return throwError(errorMessage);
   }
 
   //  registrar un usuario
